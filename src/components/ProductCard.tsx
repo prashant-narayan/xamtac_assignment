@@ -1,43 +1,110 @@
-import React from 'react'
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import React from "react";
+import { IoIosCart } from "react-icons/io";
+import { useRecoilState } from "recoil";
+import { cartState } from "~/atoms/cartState";
 
-const ProductCard = () => {
+const ProductCard = ({
+  title,
+  price,
+  image,
+  id,
+}: {
+  title: string;
+  price: number;
+  image: string;
+  id: number;
+}) => {
+  const [cart, setCart] = useRecoilState(cartState);
+  const cartItem = cart.find((item: { id: number }) => item.id === id);
+  const isInCart = !!cartItem;
+
+  const handleAddToCart = () => {
+    if (isInCart) {
+      const updatedCart = cart.map((item: { id: number; quantity: number }) =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
+      );
+      setCart(updatedCart);
+    } else {
+      setCart([
+        ...cart,
+        {
+          id: id,
+          title: title,
+          price: price,
+          image: image,
+          quantity: 1,
+        },
+      ]);
+    }
+  };
+
+  const handleRemoveFromCart = () => {
+    if (!isInCart) return;
+    if (cartItem.quantity > 1) {
+      const updatedCart = cart.map((item: { id: number; quantity: number }) =>
+        item.id === id ? { ...item, quantity: item.quantity - 1 } : item,
+      );
+      setCart(updatedCart);
+    } else {
+      const updatedCart = cart.filter((item: { id: number }) => item.id !== id);
+      setCart(updatedCart);
+    }
+  };
+  const randomDiscount = Math.floor(Math.random() * (50 - 10 + 1) + 10);
+
+  const discountedPrice = price - (price * randomDiscount) / 100;
   return (
-<div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-    <a href="#">
-        <img className="p-8 rounded-t-lg" src="/productcard.png" alt="product image" />
-    </a>
-    <div className="px-5 pb-5">
-        <a href="#">
-            <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport</h5>
-        </a>
-        <div className="flex items-center mt-2.5 mb-5">
-            <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                <svg className="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                </svg>
-                <svg className="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                </svg>
-                <svg className="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                </svg>
-                <svg className="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                </svg>
-                <svg className="w-4 h-4 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                </svg>
-            </div>
-            <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ms-3">5.0</span>
+    <div className="relative m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+      <div className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl">
+        <img className="object-cover" src={image} alt="product image" />
+        <span className="absolute left-0 top-0 m-2 rounded-full bg-black px-2 text-center text-sm font-medium text-white">
+          {randomDiscount}% OFF
+        </span>
+      </div>
+      <div className="mt-4 px-5 pb-5">
+        <h5 className="text-xl tracking-tight text-slate-900">{title}</h5>
+        <div className="mb-5 mt-2 flex items-center justify-between">
+          <p>
+            <span className="text-3xl font-bold text-slate-900">${price}</span>
+            <span className="ml-2 text-sm text-slate-900 line-through">
+              ${discountedPrice.toPrecision(4)}
+            </span>
+          </p>
         </div>
-        <div className="flex items-center justify-between">
-            <span className="text-3xl font-bold text-gray-900 dark:text-white">$599</span>
-            <a href="#" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add to cart</a>
+        <div className="flex items-center">
+          {isInCart && cartItem.quantity >= 1 && (
+            <button className="px-2 text-lg" onClick={handleRemoveFromCart}>
+              -
+            </button>
+          )}
+          <div
+            className={`w-full rounded-md bg-slate-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:cursor-pointer ${
+              isInCart ? "border-l border-r" : ""
+            }`}
+            onClick={handleAddToCart}
+          >
+            {isInCart ? (
+              <p className="text-lg">{cartItem.quantity}</p>
+            ) : (
+              <div className="flex items-center justify-evenly text-lg">
+                <IoIosCart />
+                <p>Add To Cart</p>
+              </div>
+            )}
+          </div>
+          {isInCart && cartItem.quantity >= 1 && (
+            <button className="px-2 text-lg" onClick={handleAddToCart}>
+              +
+            </button>
+          )}
         </div>
+      </div>
     </div>
-</div>
+  );
+};
 
-  )
-}
-
-export default ProductCard
+export default ProductCard;

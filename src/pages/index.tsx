@@ -1,44 +1,36 @@
-import Link from "next/link";
 import Footer from "~/components/Footer";
 import Navbar from "~/components/Navbar";
-import Herobanner from "~/components/Herobanner";
 import { api } from "~/utils/api";
-import Gridcategory from "~/components/Gridcategory";
-import ProductCard from "~/components/ProductCard";
-import { useRouter } from "next/router";
+import NewProductCard from "~/components/ProductCard";
+import Hero from "~/components/Hero";
+import Spinner from "~/components/Spinner";
 
 export default function Home() {
-const router = useRouter();
-const {data:productData} = api.product.getAllProducts.useQuery()
-const {data:singleProductData} = api.product.getProductById.useQuery({
-  id:"2"
-})
-const {data:categoryData} = api.category.getAllcategory.useQuery()
-
+  const { data: productData, isLoading } =
+    api.product.getAllProducts.useQuery();
   return (
     <>
-    <Navbar/>
-    <Herobanner/>
-    <Gridcategory/>
-    <div className="mx-2 mt-10 grid grid grid-cols-2 md:grid-cols-4 gap-4">
-      <ProductCard/>
-      <ProductCard/>
-      <ProductCard/>
-      <ProductCard/>
-      <ProductCard/>
-      <ProductCard/>
-      <ProductCard/>
-      <ProductCard/>
+      <Navbar />
+      <Hero />
+      <div className="flex w-screen items-center justify-center p-2">
+        {isLoading && <Spinner />}
+        <div
+          id="product"
+          className="flex  flex-wrap items-center justify-center"
+        >
+          {productData?.map((product) => (
+            <NewProductCard
+              key={product.id}
+              id={product.id}
+              title={product.title}
+              price={product.price}
+              image={product.image}
+            />
+          ))}
+        </div>
       </div>
-  <div>
-    {
-      productData?.map((product)=>
-      <div>{product.title}</div>
-      )
-    }
-  </div>
-  <Footer/>
+
+      <Footer />
     </>
   );
 }
-
